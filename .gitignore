@@ -1,0 +1,30 @@
+# IMDB Reviews Similarity API - Project Specific .gitignore
+
+# Trained Models (too large for Git)
+fine_tuned_model/
+*.bin
+*.pth
+
+# Training artifacts  
+results/
+logs/
+training_in_progress.marker
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment variables
+.env
+
+# Docker volumes (database data)
+postgres_data/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,110 @@
+version: '3.8'
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: imdb_reviews
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d imdb_reviews"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:6
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # Инициализация таблиц базы данных
+  init-db:
+    build: .
+    command: python scripts/init_db.py
+    volumes:
+      - .:/app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://user:password@db/imdb_reviews
+      PYTHONPATH: /app
+    restart: "no"
+
+  # Обучение модели - НЕ использует volume для избежания конфликтов
+  train:
+    build: .
+    command: python ml/train.py
+    volumes:
+      - .:/app  # Только основной код, модель сохраняется внутри контейнера
+    depends_on:
+      - init-db
+    environment:
+      DATABASE_URL: postgresql://user:password@db/imdb_reviews
+      PYTHONPATH: /app
+    restart: "no"
+    deploy:
+      resources:
+        limits:
+          memory: 6G
+
+  # Заполнение базы данных - зависит от завершения train
+  populate:
+    build: .
+    command: python scripts/populate_db.py
+    volumes:
+      - .:/app
+    depends_on:
+      train:
+        condition: service_completed_successfully  # Ждет успешного завершения train
+    environment:
+      DATABASE_URL: postgresql://user:password@db/imdb_reviews
+      PYTHONPATH: /app
+    restart: "no"
+
+  # Веб-приложение - запускается только после заполнения БД
+  web:
+    build: .
+    command: python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      populate:
+        condition: service_completed_successfully  # Ждет успешного завершения populate
+      redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://user:password@db/imdb_reviews
+      PYTHONPATH: /app
+    restart: unless-stopped
+
+  # Celery worker - запускается только после успешного заполнения
+  celery:
+    build: .
+    command: celery -A app.tasks.celery_app worker --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      populate:
+        condition: service_completed_successfully  # Ждет успешного завершения populate
+      redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://user:password@db/imdb_reviews
+      PYTHONPATH: /app
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
