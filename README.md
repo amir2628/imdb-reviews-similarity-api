@@ -1,5 +1,7 @@
+<div align="center">
 # 🎬 IMDB Reviews Similarity API 
 **English version at the end**
+</div>
 
 <div align="center">
 
