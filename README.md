@@ -349,7 +349,7 @@ celery -A app.tasks.celery_app inspect active
 
 ---
 
-## 🇺🇸 English Version
+## ![UK](https://img.shields.io/badge/🇬🇧-English-blue) English Version
 
 ### 📝 Description
 
