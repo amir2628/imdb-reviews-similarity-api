@@ -1,30 +1,28 @@
-# IMDB Reviews Similarity API - Project Specific .gitignore
-
-# Trained Models (too large for Git)
+# Обученные модели (слишком большие для Git)
 fine_tuned_model/
 *.bin
 *.pth
 
-# Training artifacts  
+# Обучающие артефакты
 results/
 logs/
 training_in_progress.marker
 
-# Python cache
+# Кэш Python
 __pycache__/
 *.pyc
 *.pyo
 
-# Environment variables
+# Переменные среды
 .env
 
-# Docker volumes (database data)
+# Тома Docker (данные базы данных)
 postgres_data/
 
-# IDE files
+# Файлы IDE
 .vscode/
 .idea/
 
-# OS files
+# Файлы операционной системы
 .DS_Store
 Thumbs.db
