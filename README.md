@@ -69,7 +69,7 @@
 1. **Клонирование репозитория:**
 ```bash
 git clone https://github.com/amir2628/imdb-reviews-similarity-api.git
-cd imdb-reviews-similarity
+cd imdb-reviews-similarity-api
 ```
 
 2. **Запуск через Docker Compose:**
@@ -404,7 +404,7 @@ If you get results that are not semantically similar to your review, due to usin
 1. **Clone the repository:**
 ```bash
 git clone https://github.com/amir2628/imdb-reviews-similarity-api.git
-cd imdb-reviews-similarity
+cd imdb-reviews-similarity-api
 ```
 
 2. **Run with Docker Compose:**
