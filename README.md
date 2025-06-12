@@ -68,7 +68,7 @@
 
 1. **Клонирование репозитория:**
 ```bash
-git clone <repository-url>
+git clone https://github.com/amir2628/imdb-reviews-similarity-api.git
 cd imdb-reviews-similarity
 ```
 
@@ -86,6 +86,11 @@ docker-compose up --build
 4. **Проверка готовности:**
 ```bash
 curl http://localhost:8000/docs
+```
+
+или просто откройте URL-адрес
+```bash
+http://localhost:8000/docs
 ```
 
 ### 📡 API Endpoints
@@ -398,7 +403,7 @@ If you get results that are not semantically similar to your review, due to usin
 
 1. **Clone the repository:**
 ```bash
-git clone <repository-url>
+git clone https://github.com/amir2628/imdb-reviews-similarity-api.git
 cd imdb-reviews-similarity
 ```
 
@@ -416,6 +421,11 @@ docker-compose up --build
 4. **Check readiness:**
 ```bash
 curl http://localhost:8000/docs
+```
+
+or simply open the url
+```bash
+http://localhost:8000/docs
 ```
 
 ### 📡 API Endpoints
